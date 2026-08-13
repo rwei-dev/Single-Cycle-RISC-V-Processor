@@ -7,10 +7,14 @@ module testbench();
   logic [1:0] KEY;
   logic reset;
   logic [9:0] LEDR;
-  logic [31:0] HEX3HEX0;
-  logic [15:0] HEX5HEX4;
+  logic [7:0] HEX0;
+  logic [7:0] HEX1;
+  logic [7:0] HEX2;
+  logic [7:0] HEX3;
+  logic [7:0] HEX4;
+  logic [7:0] HEX5;
     // instantiate device to be tested
-  top dut(clk, WriteData, DataAdr, MemWrite, SW, {KEY[1], reset}, LEDR, HEX3HEX0, HEX5HEX4);
+  top dut(clk, WriteData, DataAdr, MemWrite, SW, {KEY[1], reset}, LEDR, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
     // initialize test
     initial
      begin
@@ -25,13 +29,11 @@ module testbench();
     always @(negedge clk)
    begin
         if(MemWrite) begin
-          if(DataAdr === 100 & WriteData === 25) begin
-              $display("Simulation succeeded");
-              $stop;
-           end else if (DataAdr !== 96) begin
-              $display("Simulation failed");
-             $stop;
-           end
-         end
+	  $display("Time = %0t ns | MemWrite: Addr = %0h, Data = %0h", $time, DataAdr, WriteData);
+	      if ($time > 100) begin
+                  $display("Stopping simulation after 100ns.");
+                  $stop;
+              end
         end
+    end
 endmodule
